@@ -239,3 +239,6 @@ Temporary Items
 Sera borrado .idea/
 Sera borrado bot.py
 Sera borrado venv/
+
+# Config
+config.py
