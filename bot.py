@@ -2,12 +2,12 @@
 import os
 import logging
 
-from config import CONFIG
+import config
 from os.path import join, dirname
 from aiogram import Bot, Dispatcher, executor, types
 
 # config
-API_TOKEN = CONFIG['token']
+API_TOKEN = config.TOKEN
 
 # Logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
