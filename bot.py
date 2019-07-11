@@ -2,20 +2,18 @@
 import os
 import logging
 
-from config import CONFIG
 from os.path import join, dirname
+import config
 from aiogram import Bot, Dispatcher, executor, types
 from aiogram.types import ContentType
 
-# config
-API_TOKEN = CONFIG['token']
 
 # Logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
 
 # Initialize bot and dispatcher
-bot = Bot(token=API_TOKEN)
+bot = Bot(token=config.TOKEN)
 dp = Dispatcher(bot)
 
 # Methods
