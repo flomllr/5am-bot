@@ -4,32 +4,28 @@ import logging
 
 from os.path import join, dirname
 from dotenv import load_dotenv
-from telegram.ext import Updater, CommandHandler
+from aiogram import Bot, Dispatcher, executor, types
 
-
-# Setup
-# .env
+# .env config
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
+API_TOKEN = os.getenv('TOKEN')
+
 # Logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
-# Bot
-token = os.getenv('TOKEN')
-updater = Updater(token=token, use_context=True)
-dispatcher = updater.dispatcher
 
+# Initialize bot and dispatcher
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher(bot)
 
-# Functions
-def start(update, context):
-    context.bot.send_message(
-        chat_id=update.message.chat_id, text="I'm a bot, please talk to me!")
+# Methods
+@dp.message_handler(commands=['start', 'help'])
+async def send_welcome(message: types.message):
+    """
+    This handler will be called when cliend sends '/start' or '/help' commands.
+    """
+    await message.reply("I'm alive.")
 
-
-# Command handler
-start_handler = CommandHandler('start', start)
-dispatcher.add_handler(start_handler)
-
-
-# Start the bot
-updater.start_polling()
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
