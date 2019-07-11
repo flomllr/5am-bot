@@ -19,11 +19,18 @@ dp = Dispatcher(bot)
 
 # Methods
 @dp.message_handler(commands=['start', 'help'])
-async def send_welcome(message: types.message):
+async def send_welcome(message: types.Message):
     """
     This handler will be called when cliend sends '/start' or '/help' commands.
     """
+    print("Hello world")
     await message.reply("I'm alive.")
+
+
+@dp.message_handler()
+async def echo(message: types.Message):
+    print(message)
+    await bot.send_message(message.chat.id, message.text)
 
 
 if __name__ == '__main__':
