@@ -13,16 +13,19 @@ class DB(object):
 
         self.db = firestore.client()
 
-    async def do_find_one(self, chat_id, week_id, user_id):
+    def do_find_one(self, chat_id, week_id, user_id):
         data = self.db.collection(u"chats").document(chat_id).collection(
             u"weeks").document(week_id).collection(u"users").document(user_id).get()
         return data.to_dict()
 
-    async def do_update_one(self, chat_id, week_id, user):
+    def do_update_one(self, chat_id, week_id, user):
         data = {"first_name": user["first_name"],
                 "last_name": user["last_name"]}
-        self.db.collection(u"users").document(user["id"]).set(data)
-        old_score = await self.do_find_one(chat_id, week_id, user["id"])
-        new_score = {"score": old_score["score"] + 1}
+        user_id = str(user["id"])
+        self.db.collection(u"users").document(user_id).set(data)
+        old = self.do_find_one(chat_id, week_id, user_id)
+        old_score = old["score"] if old else 0
+        new = {"score": old_score + 1}
         self.db.collection(u"chats").document(chat_id).collection(u"weeks").document(
-            week_id).collection(u"users").document(user["id"]).set(new_score)
+            week_id).collection(u"users").document(user_id).set(new)
+        return new["score"]

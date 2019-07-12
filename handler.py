@@ -1,12 +1,9 @@
 
 from datetime import datetime
 from pytz import timezone
+from database import DB
 
-# TODO: Import database function update_one instead of local function
-
-
-def update_one(chat_id, week_id, user):
-    print("Updating db", chat_id, week_id, user)
+db = DB()
 
 
 def five_am_handler(chat, user, time):
@@ -19,13 +16,15 @@ def five_am_handler(chat, user, time):
     print("Hour:", hour)
 
     # Check if message arrived between 5am and 5:59 am
-    if hour < 5:
+    if hour < 11:
         return "You're too early. Please send your update between 5:00 and 5:59."
-    elif hour > 5:
+    elif hour > 11:
         return "Dude, it's {}:{}. You're too late.".format(hour, minute)
 
     # Message arrived in the correct timeframe
     year, week, _ = _date.isocalendar()
-    print("Year, week", year, week)
-    update_one(chat_id=chat.id, week_id="%s_%s" % (year, week), user=user)
-    return "Nice! Your new score is %s/3" % (1)
+
+    # Update the db
+    score = db.do_update_one(chat_id=str(chat.id), week_id="%s_%s" %
+                             (year, week), user=user)
+    return "Nice! Your new score is %s/3" % (score)
