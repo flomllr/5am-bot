@@ -20,7 +20,7 @@ def five_am_handler(chat, user, time):
 
     # Check if message arrived between 5am and 5:59 am
     if hour < 5:
-        return "Sorry, you're too early."
+        return "You're too early. Please send your update between 5:00 and 5:59."
     elif hour > 5:
         return "Dude, it's {}:{}. You're too late.".format(hour, minute)
 
