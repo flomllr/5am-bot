@@ -25,6 +25,6 @@ def five_am_handler(chat, user, time):
     year, week, _ = _date.isocalendar()
 
     # Update the db
-    score = db.do_update_one(chat_id=str(chat.id), week_id="%s_%s" %
-                             (year, week), user=user)
+    score = db.save_score(chat_id=str(chat.id), week_id="%s_%s" %
+                                                        (year, week), user=user)
     return "Nice! Your new score is %s/3" % (score)
