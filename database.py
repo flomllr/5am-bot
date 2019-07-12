@@ -24,7 +24,8 @@ class DB(object):
     def get_history(self, chat_id, week_id, user_id):
         data = self.db.collection(u"chats").document(chat_id).collection(
             u"weeks").document(week_id).collection(u"users").document(user_id).get()
-        history = data.to_dict()["history"]
+        data = data.to_dict()
+        history = data.get("history", []) if data else []
         return history
 
     def save_score(self, chat_id, week_id, user):
@@ -34,16 +35,22 @@ class DB(object):
         self.db.collection(u"users").document(user_id).set(data)
 
         old = self.find_user(chat_id, week_id, user_id)
-        old_score = old["score"] if old else 0
+        old_score = old.get("score", 0) if old else 0
         new_score = {"score": old_score + 1}
         self.db.collection(u"chats").document(chat_id).collection(u"weeks").document(
-            week_id).collection(u"users").document(user_id).set(new_score)
+            week_id).collection(u"users").document(user_id).set(new_score, merge=True)
 
         old = self.get_history(chat_id, week_id, user_id)
 
         tz = pytz.timezone("Europe/Berlin")
-        today = datetime.now(tz)
-        old_history = old["history"] if old else today
-        new_history = { "history": old_history.append(today)}
+        today = datetime.now(tz).strftime('%Y-%m-%d')
+        print(today)
+        old_history = old["history"] if old and old["history"] else []
+        print(old_history)
+        old_history.append(today)
+        new_history = {"history": old_history}
+        print(new_history)
         self.db.collection(u"chats").document(chat_id).collection(u"weeks").document(
-            week_id).collection(u"users").document(user_id).set(new_history)
+            week_id).collection(u"users").document(user_id).set(new_history, merge=True)
+
+        return new_score["score"]
