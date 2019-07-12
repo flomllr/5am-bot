@@ -1,2 +1,2 @@
-# 5AM_bot
-Telegram bot for 5AM groups
+# 5AM Bot
+Telegram bot for groups waking up at 5am.
