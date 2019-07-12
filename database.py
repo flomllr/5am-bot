@@ -4,10 +4,10 @@ from motor import motor_asyncio
 
 
 class DB(object):
-
     @staticmethod
     def init():
-        client = motor.motor_asyncio.AsyncIOMotorClient(config.ATLAS_CONNECTION)
+        client = motor.motor_asyncio.AsyncIOMotorClient(
+            config.ATLAS_CONNECTION)
         database = client['5am-db']
 
     @staticmethod
