@@ -1,20 +1,25 @@
-import motor
-import config
-from motor import motor_asyncio
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
+import config
 
 class DB(object):
 
-    @staticmethod
-    def init():
-        client = motor.motor_asyncio.AsyncIOMotorClient(config.ATLAS_CONNECTION)
-        database = client['5am-db']
+    def __init__(self):
+        cred = credentials.Certificate(config.SERVICE_ACCOUNT)
+        firebase_admin.initialize_app(cred)
 
-    @staticmethod
-    async def do_insert_one(self, collection, data):
-        await self.database.client[collection].insert_one(data)
+        self.db = firestore.client()
 
-    @staticmethod
-    async def do_find_one(self, collection, query):
-        data = await self.database.client[collection].find_one(query)
-        return data
+    async def do_find_one(self, chat_id, week_id, user_id):
+        data = self.db.collection(u"chats").document(chat_id).collection(u"weeks").document(week_id).collection(u"users").document(user_id).get()
+        return data.to_dict()
+
+    async def do_update_one(self, chat_id, week_id, user):
+        data = { "first_name": user["first_name"], "last_name": user["last_name"] }
+        self.db.collection(u"users").document(user["id"]).set(data)
+        old_score = await self.do_find_one(chat_id, week_id, user["id"])
+        new_score = { "score": old_score["score"] + 1 }
+        self.db.collection(u"chats").document(chat_id).collection(u"weeks").document(week_id).collection(u"users").document(user["id"]).set(new_score)
+
