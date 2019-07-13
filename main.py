@@ -59,8 +59,8 @@ async def get_score(message: Message):
     date = message.date
     chat = message.chat
     scores = score_handler(chat, date)
+
     response = "These are the current scores: \n"
-    print(scores)
     for score in scores.values():
         response += f"{score['first_name']} {score['last_name']}: {score['score']}\n"
     await bot.send_message(

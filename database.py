@@ -62,7 +62,7 @@ class DB(object):
             result_dict = {
                 "first_name": user_dict["first_name"],
                 "last_name": user_dict["last_name"],
-                "score": scores_dict[user.id]["score"]
+                "score": scores_dict[user.id].get("score", 0) if user.id in scores_dict else 0
             }
 
             users_dict[user.id] = result_dict
