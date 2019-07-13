@@ -14,7 +14,8 @@ def score_handler(chat, date):
     chat_id = str(chat.id)
     week_id = "%s_%s" % (year, week)
 
-    return db.get_scores(chat_id, week_id)
+    scores = db.get_scores(chat_id, week_id)
+    return scores
 
 
 def timezone_handler(user_id, latitude, longitude):
@@ -25,7 +26,7 @@ def timezone_handler(user_id, latitude, longitude):
 def five_am_handler(chat, user, time):
     # Get user timezone and calculate current date
     user_id = str(user.id)
-    tz = db.get_timezone(user_id)
+    tz = timezone(db.get_timezone(user_id))
     _date = time.astimezone(tz)
     hour = _date.hour
     minute = _date.minute

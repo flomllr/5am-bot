@@ -62,12 +62,11 @@ class DB(object):
             result_dict = {
                 "first_name": user_dict["first_name"],
                 "last_name": user_dict["last_name"],
-                "score": scores_dict[user.id]
+                "score": scores_dict[user.id]["score"]
             }
 
             users_dict[user.id] = result_dict
 
-        print(users_dict)
         return users_dict
 
 

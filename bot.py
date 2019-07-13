@@ -2,7 +2,7 @@ import logging
 import config
 
 from handler import five_am_handler, timezone_handler, score_handler
-from aiogram import Bot, Dispatcher, executor, types
+from aiogram import Bot, Dispatcher, executor
 from aiogram.types import ContentType, ReplyKeyboardMarkup, ReplyKeyboardRemove, Message
 from aiogram.types.reply_keyboard import KeyboardButton
 
@@ -54,7 +54,16 @@ async def get_location(message: Message):
 async def get_score(message: Message):
     date = message.date
     chat = message.chat
-    score_handler(chat, date)
+    scores = score_handler(chat, date)
+    print("entering")
+    response = "These are the current scores: \n"
+    for score in scores:
+        print(score)
+        response += f"{score['first_name']} {score['last_name']}: {score['score']}\n"
+    await bot.send_message(
+        chat_id=message.chat.id,
+        text=response
+    )
 
 
 @dp.message_handler(content_types=[ContentType.LOCATION])
