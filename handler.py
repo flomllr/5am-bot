@@ -1,19 +1,35 @@
-
-from datetime import datetime
 from pytz import timezone
+from timezonefinder import TimezoneFinder
 from database import DB
 
 db = DB()
+tf = TimezoneFinder()
+
+
+def score_handler(chat, date):
+    # Get user timezone and calculate current date
+    year, week, _ = date.isocalendar()
+
+    # Define ids
+    chat_id = str(chat.id)
+    week_id = "%s_%s" % (year, week)
+
+    scores = db.get_scores(chat_id, week_id)
+    return scores
+
+
+def timezone_handler(user_id, latitude, longitude):
+    timezone = tf.timezone_at(lng=longitude, lat=latitude)
+    db.save_timezone(user_id, timezone)
 
 
 def five_am_handler(chat, user, time):
-    print(chat, user, time)
-    tz = timezone("Europe/Berlin")
+    # Get user timezone and calculate current date
+    user_id = str(user.id)
+    tz = timezone(db.get_timezone(user_id))
     _date = time.astimezone(tz)
     hour = _date.hour
     minute = _date.minute
-    print("Date:", _date)
-    print("Hour:", hour)
 
     # Check if message arrived between 5am and 5:59 am
     if hour < 5:

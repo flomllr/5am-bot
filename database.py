@@ -44,6 +44,33 @@ class DB(object):
         return timezone
 
     """
+    Returns the scores of all users
+    """
+    def get_scores(self, chat_id, week_id):
+        scores = self.db.collection(u"chats").document(chat_id).collection(
+            u"weeks").document(week_id).collection(u"users").get()
+
+        scores_dict = {}
+        for score in scores:
+            score_dict = score.to_dict()
+            scores_dict[score.id] = score_dict
+
+        users = self.db.collection(u"users").get()
+        users_dict = {}
+        for user in users:
+            user_dict = user.to_dict()
+            result_dict = {
+                "first_name": user_dict["first_name"],
+                "last_name": user_dict["last_name"],
+                "score": scores_dict[user.id]["score"]
+            }
+
+            users_dict[user.id] = result_dict
+
+        return users_dict
+
+
+    """
     Saves score by incrementing existing one or initializing
     Also saves a history of days where the user scored
     """
