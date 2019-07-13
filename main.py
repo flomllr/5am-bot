@@ -7,7 +7,8 @@ from aiogram import Bot, Dispatcher, executor
 from aiogram.types import ContentType, ReplyKeyboardMarkup, ReplyKeyboardRemove, Message
 from aiogram.types.reply_keyboard import KeyboardButton
 
-token = config.TOKEN if os.environ.get("GCLOUD") else config.DEV_TOKEN
+production = os.environ.get("GCLOUD")
+token = config.TOKEN if production else config.DEV_TOKEN
 bot = Bot(token=token)
 dp = Dispatcher(bot)
 
@@ -94,5 +95,6 @@ def webhook(request):
 # Main function for testing the bot locally.
 # For testing locally, the DEV_TOKEN will be used
 if __name__ == "__main__":
-    print("DEV BOT IS LISTENING")
+    environment = "PROD" if production else "DEV"
+    print(environment, "BOT IS LISTENING")
     executor.start_polling(dp, skip_updates=True)
