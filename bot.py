@@ -55,11 +55,7 @@ async def location_handler(message: types.Message):
         reply_markup=ReplyKeyboardRemove()
     )
 
-    date = message.date
     user_id = str(message["from"].id)
-    chat_id = str(message.chat.id)
-    year, week, _ = date.isocalendar()
-    week_id = "%s_%s" % (year, week)
 
     latitude = message.location.latitude
     longitude = message.location.longitude
