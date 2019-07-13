@@ -35,6 +35,15 @@ class DB(object):
         return history
 
     """
+    Returns the timezone saved for the user, if it exists or defaults to Berlin
+    """
+    def get_timezone(self, user_id):
+        data = self.db.collection(u"users").document(user_id).get()
+        data = data.to_dict()
+        timezone = data.get("timezone", "Europe/Berlin") if data else "Europe/Berlin"
+        return timezone
+
+    """
     Saves score by incrementing existing one or initializing
     Also saves a history of days where the user scored
     """
@@ -43,7 +52,7 @@ class DB(object):
         data = {"first_name": user["first_name"],
                 "last_name": user["last_name"]}
         user_id = str(user["id"])
-        self.db.collection(u"users").document(user_id).set(data)
+        self.db.collection(u"users").document(user_id).set(data, merge=True)
 
         # Increment score of user or start with one if it doesn't exist
         old = self.find_user(chat_id, week_id, user_id)
@@ -67,3 +76,12 @@ class DB(object):
 
         # Return the new score
         return new_score["score"]
+
+    """
+    Saves the given timezone for the user
+    """
+    def save_timezone(self, user_id, timezone):
+        data = { "timezone": timezone }
+        self.db.collection(u"users").document(user_id).set(data, merge=True)
+
+
