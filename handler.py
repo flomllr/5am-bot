@@ -19,7 +19,7 @@ def five_am_handler(chat, user, time):
     if hour < 5:
         return "You're too early. Please send your update between 5:00 and 5:59."
     elif hour > 5:
-        return "Dude, it's {}:{}. You're too late.".format(hour, minute)
+        return "Dude, it's {}:{:0>2}. You're too late.".format(hour, minute)
 
     # Message arrived in the correct timeframe
     year, week, _ = _date.isocalendar()
