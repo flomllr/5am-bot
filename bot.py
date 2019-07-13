@@ -38,5 +38,30 @@ async def download_image(message: types.Message):
     await bot.send_photo(message.chat.id, photo, caption='Nice pic!')
 
 
+@dp.message_handler(commands=['location'])
+async def get_location(message: types.Message):
+    button = KeyboardButton("Send location", request_location=True)
+    keyboard = ReplyKeyboardMarkup(keyboard=[[button]])
+    await message.reply(
+        text="Please send me your location so I can accurately check your wake-up time.",
+        reply_markup=keyboard
+    )
+
+
+@dp.message_handler(content_types=[ContentType.LOCATION])
+async def location_handler(message: types.Message):
+    await message.reply(
+        text="Thank you!",
+        reply_markup=ReplyKeyboardRemove()
+    )
+
+    user_id = str(message["from"].id)
+
+    latitude = message.location.latitude
+    longitude = message.location.longitude
+
+    timezone_handler(user_id, latitude, longitude)
+
+
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=True)
