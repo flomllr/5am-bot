@@ -69,6 +69,7 @@ async def download_image(message: types.Message):
 
 
 def webhook(request):
+    print(request)
     if request.method == "POST":
         executor.start_polling(dp, skip_updates=True)
     return "ok"
