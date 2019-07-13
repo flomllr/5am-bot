@@ -1,9 +1,13 @@
-
-from datetime import datetime
 from pytz import timezone
+from timezonefinder import TimezoneFinder
 from database import DB
 
 db = DB()
+tf = TimezoneFinder()
+
+def timezone_handler(user_id, latitude, longitude):
+    timezone = tf.timezone_at(lng=longitude, lat=latitude)
+    db.save_timezone(user_id, timezone)
 
 
 def five_am_handler(chat, user, time):
