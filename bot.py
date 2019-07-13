@@ -1,9 +1,9 @@
 import logging
 import config
 
-from handler import five_am_handler, timezone_handler
+from handler import five_am_handler, timezone_handler, score_handler
 from aiogram import Bot, Dispatcher, executor, types
-from aiogram.types import ContentType, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from aiogram.types import ContentType, ReplyKeyboardMarkup, ReplyKeyboardRemove, Message
 from aiogram.types.reply_keyboard import KeyboardButton
 
 # Configure logging
@@ -15,7 +15,7 @@ dp = Dispatcher(bot)
 
 
 @dp.message_handler(commands=['start', 'help'])
-async def send_welcome(message: types.Message):
+async def send_welcome(message: Message):
     """
     This handler will be called when client send `/start` or `/help` commands.
     """
@@ -25,7 +25,7 @@ async def send_welcome(message: types.Message):
 
 
 @dp.message_handler(content_types=[ContentType.PHOTO])
-async def image_handler(message: types.Message):
+async def image_handler(message: Message):
     _from = message["from"]
     _date = message.date
     _chat = message.chat
@@ -33,7 +33,7 @@ async def image_handler(message: types.Message):
     await message.reply(reply)
 
 
-async def download_image(message: types.Message):
+async def download_image(message: Message):
     raw = message.photo[2].file_id
     file_info = await bot.get_file(raw)
     photo = await bot.download_file(file_info.file_path)
@@ -41,7 +41,7 @@ async def download_image(message: types.Message):
 
 
 @dp.message_handler(commands=['location'])
-async def get_location(message: types.Message):
+async def get_location(message: Message):
     button = KeyboardButton("Send location", request_location=True)
     keyboard = ReplyKeyboardMarkup(keyboard=[[button]])
     await message.reply(
@@ -50,8 +50,15 @@ async def get_location(message: types.Message):
     )
 
 
+@dp.message_handler(commands=['score'])
+async def get_score(message: Message):
+    date = message.date
+    chat = message.chat
+    score_handler(chat, date)
+
+
 @dp.message_handler(content_types=[ContentType.LOCATION])
-async def location_handler(message: types.Message):
+async def location_handler(message: Message):
     await message.reply(
         text="Thank you!",
         reply_markup=ReplyKeyboardRemove()
