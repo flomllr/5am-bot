@@ -76,8 +76,8 @@ class DB(object):
     """
     def save_score(self, chat_id, week_id, user):
         # Save user to user collection
-        data = {"first_name": user["first_name"],
-                "last_name": user["last_name"]}
+        data = {"first_name": user["first_name"] if user["firstname"] else "",
+                "last_name": user["last_name"] if user["last_name"] else ""}
         user_id = str(user["id"])
         self.db.collection(u"users").document(user_id).set(data, merge=True)
 
