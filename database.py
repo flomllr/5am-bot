@@ -19,6 +19,7 @@ class DB(object):
     """
     Returns a user within given chat, week and user
     """
+
     def find_user(self, chat_id, week_id, user_id):
         data = self.db.collection(u"chats").document(chat_id).collection(
             u"weeks").document(week_id).collection(u"users").document(user_id).get()
@@ -27,6 +28,7 @@ class DB(object):
     """
     Returns a history given chat, week and user
     """
+
     def get_history(self, chat_id, week_id, user_id):
         data = self.db.collection(u"chats").document(chat_id).collection(
             u"weeks").document(week_id).collection(u"users").document(user_id).get()
@@ -37,15 +39,18 @@ class DB(object):
     """
     Returns the timezone saved for the user, if it exists or defaults to Berlin
     """
+
     def get_timezone(self, user_id):
         data = self.db.collection(u"users").document(user_id).get()
         data = data.to_dict()
-        timezone = data.get("timezone", "Europe/Berlin") if data else "Europe/Berlin"
+        timezone = data.get(
+            "timezone", "Europe/Berlin") if data else "Europe/Berlin"
         return timezone
 
     """
     Returns the scores of all users
     """
+
     def get_scores(self, chat_id, week_id):
         scores = self.db.collection(u"chats").document(chat_id).collection(
             u"weeks").document(week_id).collection(u"users").get()
@@ -69,14 +74,14 @@ class DB(object):
 
         return users_dict
 
-
     """
     Saves score by incrementing existing one or initializing
     Also saves a history of days where the user scored
     """
+
     def save_score(self, chat_id, week_id, user):
         # Save user to user collection
-        data = {"first_name": user["first_name"] if user["firstname"] else "",
+        data = {"first_name": user["first_name"] if user["first_name"] else "",
                 "last_name": user["last_name"] if user["last_name"] else ""}
         user_id = str(user["id"])
         self.db.collection(u"users").document(user_id).set(data, merge=True)
@@ -107,8 +112,7 @@ class DB(object):
     """
     Saves the given timezone for the user
     """
+
     def save_timezone(self, user_id, timezone):
-        data = { "timezone": timezone }
+        data = {"timezone": timezone}
         self.db.collection(u"users").document(user_id).set(data, merge=True)
-
-
