@@ -26,7 +26,7 @@ async def send_welcome(message: Message):
     )
 
 
-@dp.message_handler(content_types=[ContentType.PHOTO])
+@dp.message_handler(content_types=[ContentType.PHOTO, ContentType.VIDEO])
 async def image_handler(message: Message):
     """
     This handler will be called when client sends an image 
