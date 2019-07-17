@@ -54,4 +54,4 @@ def five_am_handler(chat, user, time):
 
     # Update the db
     score = db.save_score(chat_id, week_id, user)
-    return "Nice! Your new score is %s of 3" % (score)
+    return "👍"

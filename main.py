@@ -62,7 +62,8 @@ async def get_score(message: Message):
     scores = score_handler(chat, date)
 
     response = "These are the current scores: \n"
-    for score in scores.values():
+    scores_sorted = sorted(scores.values(), key=lambda k: k['score'])
+    for score in scores_sorted:
         response += f"{score['first_name']} {score['last_name']}: {score['score']}\n"
     await bot.send_message(
         chat_id=message.chat.id,

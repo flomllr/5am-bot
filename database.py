@@ -54,7 +54,6 @@ class DB(object):
     def get_scores(self, chat_id, week_id):
         scores = self.db.collection(u"chats").document(chat_id).collection(
             u"weeks").document(week_id).collection(u"users").get()
-
         scores_dict = {}
         for score in scores:
             score_dict = score.to_dict()
