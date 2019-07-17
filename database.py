@@ -94,12 +94,9 @@ class DB(object):
             week_id).collection(u"users").document(user_id).set(new_score, merge=True)
 
         # Add today to user history and initialize history if user doesn't have one
-        old = self.get_history(chat_id, week_id, user_id)
+        old_history = self.get_history(chat_id, week_id, user_id)
         tz = pytz.timezone("Europe/Berlin")
         today = datetime.now(tz).strftime('%Y-%m-%d')
-        print(today)
-        old_history = old["history"] if old and old["history"] else []
-        print(old_history)
         old_history.append(today)
         new_history = {"history": old_history}
         print(new_history)
